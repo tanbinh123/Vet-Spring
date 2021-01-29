@@ -13,6 +13,7 @@ export default class NavBar extends Component{
                 <Nav className="mr-auto">
                     <Link to="add" className={"nav-link"}>Add Animal</Link>
                     <Link to="list" className={"nav-link"}>Animal List</Link>
+                    <Link to="users" className={"nav-link"}>Users List</Link>
                 </Nav>
             </Navbar>
 
