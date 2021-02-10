@@ -110,7 +110,8 @@ export default class Animal extends Component{
                     <MyToast show = {this.state.show} message = {this.state.method === "put" ?
                         "Animal updated Successfully." : "Animal saved Successfully."} type = {"success"}/>
                 </div>
-                <Card className={"border border-dark bg-dark text-white"}>
+                <Card className={"border border-dark text-black"}
+                      style={{backgroundColor: 'rgba(255, 255, 255, 0.4)'}}>
                     <Card.Header><FontAwesomeIcon icon={this.state.id !== "" ? faEdit : faPlusSquare}/>
                     {this.state.id !== "" ? " Update Animal" : " Add new Animal"}</Card.Header>
                     <Form id={"AnimalFormId"} onSubmit={this.state.id !== "" ?
@@ -120,19 +121,22 @@ export default class Animal extends Component{
                                 <Form.Group as={Col} controlId={"formGridTitle"}>
                                     <Form.Label>Name</Form.Label>
                                     <Form.Control required autoComplete={"off"} type="text" placeholder="Enter a Name"
-                                                  className={"bg-dark text-white"} name={"name"}
+                                                  className={"text-black"} name={"name"}
+                                                  style={{backgroundColor: 'rgba(255, 255, 255, 0.4)'}}
                                                   value={name} onChange={this.animalChange}/>
                                 </Form.Group>
                                 <Form.Group as={Col} controlId={"formGridTitle"}>
                                     <Form.Label>Age</Form.Label>
                                     <Form.Control required autoComplete={"off"} type={"number"} placeholder="Age"
-                                                  className={"bg-dark text-white"} name={"age"}
+                                                  className={"text-black"} name={"age"}
+                                                  style={{backgroundColor: 'rgba(255, 255, 255, 0.4)'}}
                                                   value={age} onChange={this.animalChange}/>
                                 </Form.Group>
                                 <Form.Group as={Col} controlId={"formGridTitle"}>
                                     <Form.Label>Type</Form.Label>
                                     <Form.Control required autoComplete={"off"} type={"text"} placeholder="Type"
-                                                  className={"bg-dark text-white"} name={"typ"}
+                                                  className={"text-black"} name={"typ"}
+                                                  style={{backgroundColor: 'rgba(255, 255, 255, 0.4)'}}
                                                   value={typ} onChange={this.animalChange}/>
                                 </Form.Group>
                             </Form.Row>

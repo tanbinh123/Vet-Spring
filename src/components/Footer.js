@@ -7,7 +7,9 @@ export default class Footer extends Component{
         let fullYear = new Date().getFullYear();
 
         return(
-            <Navbar fixed="bottom" bg="dark" variant="dark">
+            <Navbar fixed="bottom" style={{
+                backgroundColor: 'rgba(255, 255, 255, 0.0)'
+            }}>
                 <Container>
                     <Col lg={12} className={"text-center text-muted"}>
                         <div>

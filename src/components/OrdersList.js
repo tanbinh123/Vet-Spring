@@ -8,35 +8,35 @@ import {Link} from "react-router-dom";
 import AnimalModal from "./AnimalModal";
 
 
-export default class UserList extends Component{
+export default class OrdersList extends Component{
 
     constructor(props) {
         super(props);
         this.state = {
-            users: [],
+            orders: [],
             currentPage: 1,
-            usersPerPage: 5,
+            ordersPerPage: 5,
             showModal: false,
             showModalEdit: false
         };
     }
 
     componentDidMount() {
-        axios.get("http://localhost:8080/api/Users/all")
+        axios.get("http://localhost:8080/api/Orders/all")
             .then(response => response.data)
             .then((data) => {
-                this.setState({users: data})
+                this.setState({orders: data})
             })
     };
 
-    deleteUser = (userId) =>{
-        axios.delete("http://localhost:8080/api/Users?index=" + userId)
+    deleteOrder = (orderId) =>{
+        axios.delete("http://localhost:8080/api/Orders?index=" + orderId)
             .then(response => {
                 if(response.data != null){
                     this.setState({"show":true});
                     setTimeout(() => this.setState({"show":false}), 3000);
                     this.setState({
-                        users: this.state.users.filter(user => user.id !== userId)
+                        orders: this.state.orders.filter(order => order.ordersID !== orderId)
                     });
                 } else{
                     this.setState({"show":false})
@@ -67,7 +67,7 @@ export default class UserList extends Component{
     }
 
     nextPage = () => {
-        if(this.state.currentPage < Math.ceil(this.state.users.length / this.state.usersPerPage)){
+        if(this.state.currentPage < Math.ceil(this.state.orders.length / this.state.ordersPerPage)){
             this.setState({
                 currentPage: this.state.currentPage + 1
             })
@@ -75,9 +75,9 @@ export default class UserList extends Component{
     }
 
     lastPage = () => {
-        if(this.state.currentPage < Math.ceil(this.state.users.length / this.state.usersPerPage)){
+        if(this.state.currentPage < Math.ceil(this.state.orders.length / this.state.ordersPerPage)){
             this.setState({
-                currentPage: Math.ceil(this.state.users.length / this.state.usersPerPage)
+                currentPage: Math.ceil(this.state.orders.length / this.state.ordersPerPage)
             })
         }
     }
@@ -97,11 +97,11 @@ export default class UserList extends Component{
 
     render(){
 
-        const {users, currentPage, usersPerPage} = this.state;
-        const lastIndex = currentPage * usersPerPage;
-        const firstIndex = lastIndex - usersPerPage;
-        const currentUsers = users.slice(firstIndex, lastIndex);
-        const totalPages = Math.ceil(this.state.users.length / this.state.usersPerPage)
+        const {orders, currentPage, ordersPerPage} = this.state;
+        const lastIndex = currentPage * ordersPerPage;
+        const firstIndex = lastIndex - ordersPerPage;
+        const currentOrders = orders.slice(firstIndex, lastIndex);
+        const totalPages = Math.ceil(this.state.orders.length / this.state.ordersPerPage)
 
         const pageNumCss = {
             width: "45px",
@@ -114,14 +114,14 @@ export default class UserList extends Component{
         return(
             <div>
                 <div style={{"display":this.state.show ? "block" : "none"}}>
-                    <MyToast show = {this.state.show} message = {"User deleted Successfully."} type = {"danger"}/>
+                    <MyToast show = {this.state.show} message = {"Order deleted Successfully."} type = {"danger"}/>
                 </div>
                 <Card className={"border border-dark text-white"} style={{
                     backgroundColor: 'rgba(255, 255, 255, 0.4)'
                 }}>
                     <Card.Header>
                         <div style={{"float":"left", fontWeight: 'bold', color: 'black'}}>
-                            <FontAwesomeIcon icon={faList}/> Users List
+                            <FontAwesomeIcon icon={faList}/> Orders List
                         </div>
                     </Card.Header>
                     <Card.Body>
@@ -131,31 +131,27 @@ export default class UserList extends Component{
                             <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Email</th>
-                                <th>Rank</th>
-                                <th>Action</th>
+                                <th>Supply</th>
+                                <th>Actions</th>
                             </tr>
                             </thead>
                             <tbody>
-                            {users.length === 0 ?
+                            {orders.length === 0 ?
                                 <tr align={"center"}>
-                                    <td colSpan={"6"}>{users.length}</td>
+                                    <td colSpan={"6"}>{orders.length}</td>
                                 </tr>   :
-                                currentUsers.map((u) => (
-                                    <tr key={u.id}>
+                                currentOrders.map((order) => (
+                                    <tr key={order.id}>
                                         <td>
-                                            {u.id}
+                                            {order.ordersID}
                                         </td>
                                         <td>
-                                            {u.email}
-                                        </td>
-                                        <td>
-                                            {u.rank}
+                                             {order.amount}  {order.name}s
                                         </td>
                                         <td>
                                             <ButtonGroup>
-                                                <Link to={"editu/"+u.id} className={"btn btn-sm btn-outline-primary"} size={"sm"}><FontAwesomeIcon icon={faEdit}/></Link>
-                                                <Button size={"sm"} variant={"outline-danger"} onClick={this.deleteUser.bind(this, u.id)}><FontAwesomeIcon icon={faTrash}/></Button>
+                                                <Link to={"edito/"+order.ordersID} className={"btn btn-sm btn-outline-primary"} size={"sm"}><FontAwesomeIcon icon={faEdit}/></Link>
+                                                <Button size={"sm"} variant={"outline-danger"} onClick={this.deleteOrder.bind(this, order.ordersID)}><FontAwesomeIcon icon={faTrash}/></Button>
                                             </ButtonGroup>
                                         </td>
                                     </tr>

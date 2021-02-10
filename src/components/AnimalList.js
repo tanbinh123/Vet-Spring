@@ -1,10 +1,11 @@
 import {React, Component} from "react";
-import {Button, ButtonGroup, Card, FormControl, InputGroup, Nav, Table} from "react-bootstrap";
+import {Modal, Button, ButtonGroup, Card, FormControl, InputGroup, Nav, Table} from "react-bootstrap";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faList, faEdit, faTrash, faStepBackward, faStepForward, faFastBackward, faFastForward} from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios'
 import MyToast from "./MyToast";
 import {Link} from "react-router-dom";
+import AnimalModal from "./AnimalModal";
 
 
 export default class AnimalList extends Component{
@@ -14,7 +15,9 @@ export default class AnimalList extends Component{
         this.state = {
             animals: [],
             currentPage: 1,
-            animalsPerPage: 5
+            animalsPerPage: 5,
+            showModal: false,
+            showModalEdit: false
         };
     }
 
@@ -79,6 +82,27 @@ export default class AnimalList extends Component{
         }
     }
 
+    handleShow = () => {
+        this.setState({
+            showModal: true
+        })
+    }
+
+    // handleShowWithParams = (animalId) => {
+    //     this.setState({
+    //         showModalEdit: true
+    //     })
+    // }
+
+    handleClose = () => {
+        this.setState({
+            showModal: false
+
+        },
+        console.log("asdasd")
+        )
+    }
+
     render(){
 
         const {animals, currentPage, animalsPerPage} = this.state;
@@ -100,10 +124,23 @@ export default class AnimalList extends Component{
             <div style={{"display":this.state.show ? "block" : "none"}}>
                 <MyToast show = {this.state.show} message = {"Animal deleted Successfully."} type = {"danger"}/>
             </div>
-            <Card className={"border border-dark bg-dark text-white"}>
-                <Card.Header><FontAwesomeIcon icon={faList}/> Animal List</Card.Header>
+            <Card className={"border border-dark text-white"} style={{
+                backgroundColor: 'rgba(255, 255, 255, 0.4)'
+            }}>
+                <Card.Header>
+                    <div style={{"float":"left", fontWeight: 'bold', color: 'black'}}>
+                        <FontAwesomeIcon icon={faList}/> Animal List
+                    </div>
+                    <div style={{"float":"right"}}>
+                        <Button size={"sm"} onClick={this.handleShow}>
+                            Add Animal
+                        </Button>
+                    </div>
+                </Card.Header>
                 <Card.Body>
-                    <Table bordered hover striped variant={"dark"}>
+                    <Table bordered hover striped variant={"secondary"} style={{
+                        backgroundColor: 'rgba(255, 255, 255, 0.4)'
+                    }}>
                         <thead>
                         <tr>
                             <th>ID</th>
@@ -136,6 +173,7 @@ export default class AnimalList extends Component{
                                         <ButtonGroup>
                                             <Link to={"edit/"+animal.animalID} className={"btn btn-sm btn-outline-primary"} size={"sm"}><FontAwesomeIcon icon={faEdit}/></Link>
                                             <Button size={"sm"} variant={"outline-danger"} onClick={this.deleteAnimal.bind(this, animal.animalID)}><FontAwesomeIcon icon={faTrash}/></Button>
+                                            {/*<Button onClick={this.handleShowWithParams(animal.animalID)} className={"btn btn-sm btn-outline-primary"}><FontAwesomeIcon icon={faEdit}/></Button>*/}
                                         </ButtonGroup>
                                     </td>
                                 </tr>
@@ -145,7 +183,7 @@ export default class AnimalList extends Component{
                     </Table>
                 </Card.Body>
                 <Card.Footer>
-                    <div style={{"float":"left"}}>
+                    <div style={{"float":"left", color: 'black'}}>
                         Showing page {currentPage} of {totalPages}
                     </div>
                     <div style={{"float":"right"}}>
@@ -176,6 +214,13 @@ export default class AnimalList extends Component{
                     </div>
                 </Card.Footer>
             </Card>
+
+
+                <Modal show={this.state.showModal}
+                       onHide={this.handleClose} onClick={this.handleClose}>
+                        <AnimalModal />
+                </Modal>
+
             </div>
         )
     }
