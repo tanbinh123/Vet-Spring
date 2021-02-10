@@ -113,6 +113,8 @@ export default class UserList extends Component{
 
         return(
             <div>
+                {console.log(localStorage.getItem("userid"))}
+
                 <div style={{"display":this.state.show ? "block" : "none"}}>
                     <MyToast show = {this.state.show} message = {"User deleted Successfully."} type = {"danger"}/>
                 </div>

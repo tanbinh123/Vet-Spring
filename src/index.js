@@ -6,6 +6,8 @@ import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
   <React.StrictMode>
+      {localStorage.setItem("userID", null)}
+      {localStorage.setItem("islogged", "0")}
     <App />
   </React.StrictMode>,
   document.getElementById('root')

@@ -14,6 +14,8 @@ import OrdersList from "./components/OrdersList";
 import OrderAdd from "./components/OrderAdd";
 import Storage from "./components/Storage";
 import SupplyAdd from "./components/SupplyAdd";
+import Booking from "./components/Booking";
+import Login from "./components/Login";
 
 function App() {
 
@@ -48,6 +50,8 @@ function App() {
                             <Route path={"/storage"} exact component={Storage}/>
                             <Route path={"/edits/:id"} exact component={SupplyAdd}/>
                             <Route path={"/addsupply"} exact component={SupplyAdd}/>
+                            <Route path={"/booking"} exact component={Booking}/>
+                            <Route path={"/login"} exact component={Login}/>
                         </Switch>
                     </Col>
                 </Row>
