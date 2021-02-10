@@ -8,15 +8,16 @@ public class Orders {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int OrdersID;
 
-    @OneToOne
-    private Supply supply;
+    private String Name;
+    private int Amount;
 
     public Orders() {
     }
 
-    public Orders(int OrdersID, Supply supply) {
-        this.OrdersID = OrdersID;
-        this.supply = supply;
+    public Orders(int ordersID, String name, int amount) {
+        OrdersID = ordersID;
+        Name = name;
+        Amount = amount;
     }
 
     public int getOrdersID() {
@@ -24,14 +25,22 @@ public class Orders {
     }
 
     public void setOrdersID(int ordersID) {
-        this.OrdersID = ordersID;
+        OrdersID = ordersID;
     }
 
-    public Supply getSupply() {
-        return supply;
+    public String getName() {
+        return Name;
     }
 
-    public void setSupply(Supply supply) {
-        this.supply = supply;
+    public void setName(String name) {
+        Name = name;
+    }
+
+    public int getAmount() {
+        return Amount;
+    }
+
+    public void setAmount(int amount) {
+        Amount = amount;
     }
 }

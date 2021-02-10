@@ -1,7 +1,6 @@
 package com.filip.vet.dao.Models;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 public class Visit {
@@ -17,22 +16,15 @@ public class Visit {
     @OneToOne
     private User client;
 
-    @OneToOne
-    private User worker;
-
-    @OneToMany
-    private List<Supply> supplyList;
 
     public Visit() {
     }
 
-    public Visit(int visitID, String day, Animal animal, User client, User worker, List<Supply> supplyList) {
+    public Visit(int visitID, String day, Animal animal, User client) {
         VisitID = visitID;
         Day = day;
         this.animal = animal;
         this.client = client;
-        this.worker = worker;
-        this.supplyList = supplyList;
     }
 
     public int getVisitID() {
@@ -65,21 +57,5 @@ public class Visit {
 
     public void setClient(User client) {
         this.client = client;
-    }
-
-    public User getWorker() {
-        return worker;
-    }
-
-    public void setWorker(User worker) {
-        this.worker = worker;
-    }
-
-    public List<Supply> getSupplyList() {
-        return supplyList;
-    }
-
-    public void setSupplyList(List<Supply> supplyList) {
-        this.supplyList = supplyList;
     }
 }

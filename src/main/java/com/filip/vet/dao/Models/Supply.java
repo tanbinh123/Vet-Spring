@@ -47,3 +47,4 @@ public class Supply {
         this.amount = amount;
     }
 }
+
