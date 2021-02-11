@@ -6,6 +6,7 @@ import axios from 'axios'
 import MyToast from "./MyToast";
 import {Link} from "react-router-dom";
 import AnimalModal from "./AnimalModal";
+import "./CSS/Style.css"
 
 
 export default class OrdersList extends Component{
@@ -176,7 +177,7 @@ export default class OrdersList extends Component{
                                         <FontAwesomeIcon icon={faStepBackward}/> Prev
                                     </Button>
                                 </InputGroup.Prepend>
-                                <FormControl style={pageNumCss} className={"bg-dark"} name={"currentPage"} value={currentPage}
+                                <FormControl className={"bg-dark pageNumCss"} name={"currentPage"} value={currentPage}
                                              onChange={this.changePage}/>
                                 <InputGroup.Append>
                                     <Button type={"button"} variant={"outline-info"} disabled={currentPage === totalPages}

@@ -35,7 +35,7 @@ export default class Login extends Component{
                 if(user.password === pass){
                     localStorage.setItem("userID", user.id)
                     localStorage.setItem("islogged", true)
-                    this.usersList()
+                    this.afterLoginPage(user)
                 }
             }
         })
@@ -51,8 +51,11 @@ export default class Login extends Component{
         });
     }
 
-    usersList = () => {
-        return this.props.history.push("/")
+    afterLoginPage = (user) => {
+        if(user.rank === "CLIENT")
+            return this.props.history.push("/clientpage")
+        else
+            return this.props.history.push("/workerpage")
     }
 
     render() {
@@ -63,8 +66,7 @@ export default class Login extends Component{
                 <Card className={"border border-dark text-black"} style={{
                     backgroundColor: 'rgba(255, 255, 255, 0.4)'
                 }}>
-                    <Card.Header><FontAwesomeIcon icon={this.state.id !== "" ? faEdit : faPlusSquare}/>
-                        {this.state.id !== "" ? " Update User" : " Add new User"}</Card.Header>
+                    <Card.Header><FontAwesomeIcon icon={this.state.id !== "" ? faEdit : faPlusSquare}/> Log in</Card.Header>
                     <Form id={"LoginFormId"} onReset={this.resetForm}>
                         <Card.Body>
                             <Form.Row>

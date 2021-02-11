@@ -1,7 +1,6 @@
 import './App.css';
 import NavBar from "./components/NavBar";
 import {Container, Row, Col} from "react-bootstrap";
-import Welcome from "./components/Welcome";
 import Footer from "./components/Footer";
 import Animal from "./components/Animal";
 import AnimalList from "./components/AnimalList";
@@ -16,28 +15,21 @@ import Storage from "./components/Storage";
 import SupplyAdd from "./components/SupplyAdd";
 import Booking from "./components/Booking";
 import Login from "./components/Login";
+import ClientPage from "./components/ClientPage";
+import VisitCalendar from "./components/VisitCalendar";
+import BookingPage from "./components/BookingPage";
+import WorkerPage from "./components/WorkerPage";
 
 function App() {
 
-    const marginTop = {
-        marginTop: "20px"
-    }
-
   return (
-      <div style={{
-          backgroundImage: `url(${image})`,
-          backgroundPositionY: -280,
-          backgroundRepeat: 'no-repeat',
-          backgroundSize: 'cover',
-          height: '100vh'
-      }}>
+      <div className={"background-image"} style={{backgroundImage: `url(${image})`}}>
         <Router>
-            <NavBar/>
+            <NavBar />
             <Container>
                 <Row>
-                    <Col lg={12} style={marginTop}>
+                    <Col lg={12} className={"margin-top"}>
                         <Switch>
-                            <Route path={"/"} exact component={Welcome}/>
                             <Route path={"/add"} exact component={Animal}/>
                             <Route path={"/list"} exact component={AnimalList}/>
                             <Route path={"/edit/:id"} exact component={Animal}/>
@@ -52,6 +44,12 @@ function App() {
                             <Route path={"/addsupply"} exact component={SupplyAdd}/>
                             <Route path={"/booking"} exact component={Booking}/>
                             <Route path={"/login"} exact component={Login}/>
+                            <Route path={"/clientpage"} exact component={ClientPage}/>
+                            <Route path={"/visitCalendar"} exact component={VisitCalendar}/>
+                            <Route path={"/bookingPage"} exact component={BookingPage}/>
+                            <Route path={"/workerpage"} exact component={WorkerPage}/>
+
+
                         </Switch>
                     </Col>
                 </Row>

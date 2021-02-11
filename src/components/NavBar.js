@@ -5,11 +5,11 @@ import img from "../images/pet-shop.png"
 
 export default class NavBar extends Component{
 
-    asd = () =>{
-        localStorage.setItem("userID", null)
-        localStorage.setItem("islogged", "1")
-        console.log(localStorage.getItem("userID"))
-        console.log(localStorage.getItem("islogged"))
+    constructor(props) {
+        super(props);
+        this.state = {
+            isloggedin: false
+        }
     }
 
     render() {
@@ -18,9 +18,6 @@ export default class NavBar extends Component{
                 backgroundColor: 'rgba(255, 255, 255, 0.0)',
                 fontWeight: 'bold'
             }}>
-                <div>
-                    <Button onClick={this.asd}>press</Button>
-                </div>
                 <Link to={""} className={"navbar-brand"}>
                     <Image src={img} style={{
                         width: '120%',
@@ -37,10 +34,11 @@ export default class NavBar extends Component{
                     <Link to="storage" className={"nav-link"}>Storage</Link>
                     <Link to="addsupply" className={"nav-link"}>Supply Add</Link>
                     <Link to="booking" className={"nav-link"}>Booking</Link>
-                    {localStorage.getItem("islogged") === "1" && <Link to={""}>logout</Link> }
+                    <Link to="clientpage" className={"nav-link"}>Client</Link>
+                    {this.state.isloggedin === true && <Link to={""}>logout</Link> }
                 </Nav>
                 <Nav className={"ml-auto"}>
-                    {localStorage.getItem("islogged") === "0" && <Link to="login" className={"nav-link"}>Login</Link>}
+                    {this.state.isloggedin === false && <Link to="login" className={"nav-link"}>Login</Link>}
                     <Link to="addusers" className={"nav-link"}>Register</Link>
                 </Nav>
             </Navbar>

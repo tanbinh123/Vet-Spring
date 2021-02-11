@@ -6,7 +6,7 @@ import axios from 'axios'
 import MyToast from "./MyToast";
 import {Link} from "react-router-dom";
 import AnimalModal from "./AnimalModal";
-
+import "./CSS/Style.css"
 
 export default class Storage extends Component{
 
@@ -103,13 +103,6 @@ export default class Storage extends Component{
         const currentSupplies = supplies.slice(firstIndex, lastIndex);
         const totalPages = Math.ceil(this.state.supplies.length / this.state.suppliesPerPage)
 
-        const pageNumCss = {
-            width: "45px",
-            border: "1px solid #17A2B8",
-            color: "#17A2B8",
-            textAlign: "center",
-            fontWeight: "bold"
-        }
 
         return(
             <div>
@@ -180,7 +173,7 @@ export default class Storage extends Component{
                                         <FontAwesomeIcon icon={faStepBackward}/> Prev
                                     </Button>
                                 </InputGroup.Prepend>
-                                <FormControl style={pageNumCss} className={"bg-dark"} name={"currentPage"} value={currentPage}
+                                <FormControl className={"bg-dark pageNumCss"} name={"currentPage"} value={currentPage}
                                              onChange={this.changePage}/>
                                 <InputGroup.Append>
                                     <Button type={"button"} variant={"outline-info"} disabled={currentPage === totalPages}

@@ -1,11 +1,21 @@
 import {React, Component} from "react";
 import {Modal, Button, ButtonGroup, Card, FormControl, InputGroup, Nav, Table} from "react-bootstrap";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faList, faEdit, faTrash, faStepBackward, faStepForward, faFastBackward, faFastForward} from '@fortawesome/free-solid-svg-icons';
+import {
+    faList,
+    faEdit,
+    faTrash,
+    faStepBackward,
+    faStepForward,
+    faFastBackward,
+    faFastForward,
+    faSearch, faTimes
+} from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios'
 import MyToast from "./MyToast";
 import {Link} from "react-router-dom";
 import AnimalModal from "./AnimalModal";
+import "./CSS/Style.css"
 
 
 export default class UserList extends Component{
@@ -14,6 +24,8 @@ export default class UserList extends Component{
         super(props);
         this.state = {
             users: [],
+            usersSearch: [],
+            search: '',
             currentPage: 1,
             usersPerPage: 5,
             showModal: false,
@@ -22,12 +34,31 @@ export default class UserList extends Component{
     }
 
     componentDidMount() {
+        this.getUsers()
+    };
+
+    getUsers = () => {
         axios.get("http://localhost:8080/api/Users/all")
             .then(response => response.data)
             .then((data) => {
                 this.setState({users: data})
             })
-    };
+    }
+
+    findUserByEmail = (userEmail) => {
+        this.state.users.map(user => {
+            if(user.email === userEmail){
+                this.state.usersSearch.push(user)
+            }
+        })
+    }
+
+    switchUsers = (email) => {
+        this.findUserByEmail(email)
+        this.setState({
+            "users": this.state.usersSearch
+        })
+    }
 
     deleteUser = (userId) =>{
         axios.delete("http://localhost:8080/api/Users?index=" + userId)
@@ -48,6 +79,19 @@ export default class UserList extends Component{
         this.setState({
             [event.target.name]: parseInt(event.target.value)
         })
+    }
+
+    searchChange = event => {
+        this.setState({
+            [event.target.name]: event.target.value
+        })
+    }
+
+    cancelSearch = () => {
+        this.setState({
+            "search": ''
+        })
+        this.getUsers()
     }
 
     firstPage = () => {
@@ -82,39 +126,18 @@ export default class UserList extends Component{
         }
     }
 
-    handleShow = () => {
-        this.setState({
-            showModal: true
-        })
-    }
 
-    handleClose = () => {
-        this.setState({
-                showModal: false
-            }
-        )
-    }
 
     render(){
 
-        const {users, currentPage, usersPerPage} = this.state;
+        const {users, currentPage, usersPerPage, search} = this.state;
         const lastIndex = currentPage * usersPerPage;
         const firstIndex = lastIndex - usersPerPage;
         const currentUsers = users.slice(firstIndex, lastIndex);
         const totalPages = Math.ceil(this.state.users.length / this.state.usersPerPage)
 
-        const pageNumCss = {
-            width: "45px",
-            border: "1px solid #17A2B8",
-            color: "#17A2B8",
-            textAlign: "center",
-            fontWeight: "bold"
-        }
-
         return(
             <div>
-                {console.log(localStorage.getItem("userid"))}
-
                 <div style={{"display":this.state.show ? "block" : "none"}}>
                     <MyToast show = {this.state.show} message = {"User deleted Successfully."} type = {"danger"}/>
                 </div>
@@ -124,6 +147,22 @@ export default class UserList extends Component{
                     <Card.Header>
                         <div style={{"float":"left", fontWeight: 'bold', color: 'black'}}>
                             <FontAwesomeIcon icon={faList}/> Users List
+                        </div>
+                        <div style={{"float":"right", fontWeight: 'bold', color: 'black'}}>
+                            <InputGroup size={"sm"}>
+                                <FormControl placeholder={"Search"} name={"search"} value={search}
+                                             className={"text-black info-border"} onChange={this.searchChange} />
+                                    <InputGroup.Append>
+                                        <Button size={"sm"} variant={"outline-info"}
+                                                type={"button"} onClick={() => this.switchUsers(search)}>
+                                            <FontAwesomeIcon icon={faSearch}/>
+                                        </Button>
+                                        <Button size={"sm"} variant={"outline-danger"}
+                                                type={"button"} onClick={this.cancelSearch}>
+                                            <FontAwesomeIcon icon={faTimes}/>
+                                        </Button>
+                                    </InputGroup.Append>
+                            </InputGroup>
                         </div>
                     </Card.Header>
                     <Card.Body>
@@ -182,7 +221,7 @@ export default class UserList extends Component{
                                         <FontAwesomeIcon icon={faStepBackward}/> Prev
                                     </Button>
                                 </InputGroup.Prepend>
-                                <FormControl style={pageNumCss} className={"bg-dark"} name={"currentPage"} value={currentPage}
+                                <FormControl className={"bg-dark pageNumCss"} name={"currentPage"} value={currentPage}
                                              onChange={this.changePage}/>
                                 <InputGroup.Append>
                                     <Button type={"button"} variant={"outline-info"} disabled={currentPage === totalPages}
@@ -198,12 +237,6 @@ export default class UserList extends Component{
                         </div>
                     </Card.Footer>
                 </Card>
-
-
-                <Modal show={this.state.showModal} onHide={this.handleClose} onClick={this.handleClose}>
-                    <AnimalModal />
-                </Modal>
-
             </div>
         )
     }

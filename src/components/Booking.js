@@ -1,7 +1,12 @@
 import {React, Component} from "react";
-import {Col, Row, Container} from "react-bootstrap";
+import {Button, Col, Row, Container} from "react-bootstrap";
+import "./CSS/Style.css"
 
-export default class SupplyAdd extends Component {
+export default class Booking extends Component {
+
+    bookingPage = () => {
+        return this.props.history.push("/bookingPage")
+    }
 
     months(){
         var tab = []
@@ -20,9 +25,11 @@ export default class SupplyAdd extends Component {
         for(var i = 0; i < 7; i++){
             tab.push(
             <Col className="day p-lg-2 border border-left-0 border-top-0 text-truncate ">
-                <h5 className="row align-items-center">
-                    <span className="date col-1">{i + x + 1}</span>
-                </h5>
+                <Button className={"btn-calendar"} onClick={this.bookingPage}>
+                    <h5 className="row align-items-center">
+                        <span className="date col-1">{i + x + 1}</span>
+                    </h5>
+                </Button>
                 <p className="d-sm-none">No events</p>
             </Col>
             )
