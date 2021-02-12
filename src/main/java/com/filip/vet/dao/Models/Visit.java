@@ -8,7 +8,8 @@ public class Visit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int VisitID;
-    private String Day;
+    private String Time;
+    private int Day;
 
     @OneToOne
     private Animal animal;
@@ -20,8 +21,9 @@ public class Visit {
     public Visit() {
     }
 
-    public Visit(int visitID, String day, Animal animal, User client) {
+    public Visit(int visitID, String time, int day, Animal animal, User client) {
         VisitID = visitID;
+        Time = time;
         Day = day;
         this.animal = animal;
         this.client = client;
@@ -35,11 +37,19 @@ public class Visit {
         VisitID = visitID;
     }
 
-    public String getDay() {
+    public String getTime() {
+        return Time;
+    }
+
+    public void setTime(String time) {
+        Time = time;
+    }
+
+    public int getDay() {
         return Day;
     }
 
-    public void setDay(String day) {
+    public void setDay(int day) {
         Day = day;
     }
 

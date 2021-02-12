@@ -1,9 +1,6 @@
 package com.filip.vet.dao.Models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Animal {
@@ -14,14 +11,18 @@ public class Animal {
     private String Name;
     private int Age;
     private String Typ;
+    @OneToOne
+    private User Owner;
 
-    public Animal() {}
+    public Animal() {
+    }
 
-    public Animal(int animalID, String name, int age, String typ) {
+    public Animal(int animalID, String name, int age, String typ, User owner) {
         AnimalID = animalID;
         Name = name;
         Age = age;
         Typ = typ;
+        Owner = owner;
     }
 
     public int getAnimalID() {
@@ -54,5 +55,13 @@ public class Animal {
 
     public void setTyp(String typ) {
         Typ = typ;
+    }
+
+    public User getOwner() {
+        return Owner;
+    }
+
+    public void setOwner(User owner) {
+        Owner = owner;
     }
 }

@@ -36,8 +36,8 @@ public class AnimalManager {
 
     @EventListener(ApplicationReadyEvent.class)
     public void fillDB(){
-        save(new Animal(1, "Fufu", 2, "Pies"));
-        save(new Animal(2, "Mefi", 1, "Pies"));
+       /* save(new Animal(1, "Fufu", 2, "Pies"));
+        save(new Animal(2, "Mefi", 1, "Pies"));*/
     }
 
 }
