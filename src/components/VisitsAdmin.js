@@ -8,17 +8,16 @@ import {Link} from "react-router-dom";
 import "./CSS/Style.css"
 
 
-export default class VisitCalendar extends Component{
+export default class VisitsAdmin extends Component{
 
     constructor(props) {
         super(props);
         this.state = {
-            userid: localStorage.getItem("userID"),
             visits: [],
             data2: [],
             currentPage: 1,
             visitsPerPage: 5,
-            };
+        };
     }
 
     componentDidMount() {
@@ -26,9 +25,7 @@ export default class VisitCalendar extends Component{
             .then(response => response.data)
             .then((data) => {
                 data.map(visit => {
-                    if (visit.client.id == this.state.userid) {
-                            this.state.data2.push(visit)
-                    }
+                    this.state.data2.push(visit)
                 })
 
                 this.setState({
@@ -91,8 +88,13 @@ export default class VisitCalendar extends Component{
     }
 
     panel = () => {
-        return this.props.history.push("/clientpage")
+        console.log(localStorage.getItem("userRank"))
+        if(localStorage.getItem("userRank") === "ADMIN")
+            return this.props.history.push("/adminpage")
+        else if(localStorage.getItem("userRank") === "WORKER")
+            return this.props.history.push("/workerpage")
     }
+
 
     render(){
 
@@ -112,8 +114,8 @@ export default class VisitCalendar extends Component{
                         <div style={{"float":"left", fontWeight: 'bold', color: 'black'}}>
                             <FontAwesomeIcon icon={faList}/> Visits List
                         </div>
-                        <div style={{"float":"right", fontWeight: 'bold', color: 'black'}}>
-                            <Button className={"back-btn"} style={{marginLeft: 0}} onClick={this.panel}>
+                        <div style={{"float":"left", fontWeight: 'bold', color: 'black'}}>
+                            <Button size={"sm"} className={"back-btn"} onClick={this.panel}>
                                 Back to Panel
                             </Button>
                         </div>
@@ -125,6 +127,7 @@ export default class VisitCalendar extends Component{
                                 <th>Day</th>
                                 <th>Time</th>
                                 <th>Animal</th>
+                                <th>Client</th>
                                 <th>Action</th>
                             </tr>
                             </thead>
@@ -143,6 +146,9 @@ export default class VisitCalendar extends Component{
                                         </td>
                                         <td>
                                             {visit.animal.name}
+                                        </td>
+                                        <td>
+                                            {visit.client.email}
                                         </td>
                                         <td>
                                             <ButtonGroup>

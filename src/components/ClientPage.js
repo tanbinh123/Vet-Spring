@@ -70,30 +70,31 @@ export default class ClientPage extends Component{
 
 
         return(
-            <Card className={"border border-dark text-black"} style={cardStyle}>
+            <Card className={"border border-dark text-black bg-trans"}>
                 <Card.Header className={"text-center"} style={{fontWeight: 'bold', fontSize: 25}}>
                     Welcome to Client Panel!
                 </Card.Header>
 
                 <Card.Body >
                     <Row>
-                        <Col className={"text-center"}>
-                            {this.state.email} Profile
+                        <Col className={"user-text"}>
+                            <p style={{fontSize: 40}}>User:</p>
+                            <p>{this.state.email}</p>
                         </Col>
                         <Col className={"text-center"}>
-                            <Button className={"border border-dark"} variant={"outline-info"} style={buttonStyle2} onClick={this.booking}>
+                            <Button className={"border border-dark btn-panel"} onClick={this.booking}>
                                 Booking
                             </Button>
                         </Col>
                     </Row>
                     <Row style={{paddingTop: 20}}>
                         <Col className={"text-center"}>
-                            <Button className={"border border-dark"} style={buttonStyle} onClick={this.animalManager}>
+                            <Button className={"border border-dark btn-panel"} onClick={this.animalManager}>
                                 Animal Manager
                             </Button>
                         </Col>
                         <Col className={"text-center"}>
-                            <Button className={"border border-dark"} style={buttonStyle} onClick={this.visitCalendar}>
+                            <Button className={"border border-dark btn-panel"} onClick={this.visitCalendar}>
                                 Visit Calendar
                             </Button>
                         </Col>

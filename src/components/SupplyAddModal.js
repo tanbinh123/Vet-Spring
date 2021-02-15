@@ -6,7 +6,7 @@ import {faEdit, faList, faPlusSquare, faSave, faUndo} from '@fortawesome/free-so
 import axios from "axios";
 import MyToast from "./MyToast";
 
-export default class SupplyAdd extends Component{
+export default class SupplyAddModal extends Component{
 
     constructor(props) {
         super(props);
@@ -23,52 +23,14 @@ export default class SupplyAdd extends Component{
     }
 
     componentDidMount() {
-        const supplyId = +this.props.match.params.id;
-        if(supplyId != null){
-            this.finSupplyById(supplyId);
-        }
+
     }
 
-    finSupplyById = (SupplyId) => {
-        axios.get("http://localhost:8080/api/Supplies?index="+SupplyId)
-            .then(response => {
-                if(response.data != null){
-                    this.setState({
-                        supplyID: response.data.supplyID,
-                        name: response.data.name,
-                        amount: response.data.amount
-                    })
-                }
-            }).catch((error) => {
-            console.error("Error" + error)
-        })
-    }
 
     resetForm = () => {
         this.setState(() => this.initialState)
     }
 
-    updateSupply = event => {
-        event.preventDefault();
-
-        const supply = {
-            supplyID : this.state.supplyID,
-            name: this.state.name,
-            amount: this.state.amount
-        }
-
-        axios.put("http://localhost:8080/api/Supplies", supply)
-            .then(response => {
-                if(response.data != null){
-                    this.setState({"show":true, "method":"put"})
-                    setTimeout(() => this.setState({"show":false}), 3000)
-                    setTimeout(() => this.suppliesList(), 3000)
-                } else{
-                    this.setState({"show":false})
-                }
-            })
-        this.setState(this.initialState)
-    }
 
     SubmitSupply = event => {
         event.preventDefault();
@@ -98,10 +60,6 @@ export default class SupplyAdd extends Component{
 
     suppliesList = () => {
         return this.props.history.push("/storage")
-    }
-
-    panel = () => {
-        return this.props.history.push("/workerpage")
     }
 
     render() {
@@ -146,11 +104,6 @@ export default class SupplyAdd extends Component{
                                     <FontAwesomeIcon icon={faList}/> Storage
                                 </Button> : null
                             }
-                            <div style={{"float":"right", fontWeight: 'bold', color: 'black'}}>
-                                <Button size={"sm"} className={"back-btn"} style={{marginLeft: 0}} onClick={this.panel}>
-                                    Back to Panel
-                                </Button>
-                            </div>
                         </Card.Footer>
                     </Form>
                 </Card>

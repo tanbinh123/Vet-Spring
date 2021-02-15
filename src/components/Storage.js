@@ -5,8 +5,8 @@ import {faList, faEdit, faTrash, faStepBackward, faStepForward, faFastBackward, 
 import axios from 'axios'
 import MyToast from "./MyToast";
 import {Link} from "react-router-dom";
-import AnimalModal from "./AnimalModal";
 import "./CSS/Style.css"
+import SupplyAddModal from "./SupplyAddModal";
 
 export default class Storage extends Component{
 
@@ -91,8 +91,15 @@ export default class Storage extends Component{
     handleClose = () => {
         this.setState({
                 showModal: false
-            }
-        )
+            })
+    }
+
+    panel = () => {
+        console.log(localStorage.getItem("userRank"))
+        if(localStorage.getItem("userRank") === "ADMIN")
+            return this.props.history.push("/adminpage")
+        else if(localStorage.getItem("userRank") === "WORKER")
+            return this.props.history.push("/workerpage")
     }
 
     render(){
@@ -109,18 +116,24 @@ export default class Storage extends Component{
                 <div style={{"display":this.state.show ? "block" : "none"}}>
                     <MyToast show = {this.state.show} message = {"Supply deleted Successfully."} type = {"danger"}/>
                 </div>
-                <Card className={"border border-dark text-white"} style={{
-                    backgroundColor: 'rgba(255, 255, 255, 0.4)'
-                }}>
+                <Card className={"border border-dark text-white bg-trans"}>
                     <Card.Header>
                         <div style={{"float":"left", fontWeight: 'bold', color: 'black'}}>
                             <FontAwesomeIcon icon={faList}/> Storage
                         </div>
+                        <div style={{"float":"left", fontWeight: 'bold', color: 'black'}}>
+                            <Button size={"sm"} className={"back-btn"} onClick={this.panel}>
+                                Back to Panel
+                            </Button>
+                        </div>
+                        <div style={{"float":"right"}}>
+                            <Button size={"sm"} onClick={this.handleShow}>
+                                Add Supply
+                            </Button>
+                        </div>
                     </Card.Header>
                     <Card.Body>
-                        <Table bordered hover striped variant={"secondary"} style={{
-                            backgroundColor: 'rgba(255, 255, 255, 0.4)'
-                        }}>
+                        <Table bordered hover striped variant={"secondary bg-trans"}>
                             <thead>
                             <tr>
                                 <th>ID</th>
@@ -164,23 +177,23 @@ export default class Storage extends Component{
                         <div style={{"float":"right"}}>
                             <InputGroup size={"sm"}>
                                 <InputGroup.Prepend>
-                                    <Button type={"button"} variant={"outline-info"} disabled={currentPage === 1}
+                                    <Button type={"button"} variant={"outline-dark"} disabled={currentPage === 1}
                                             onClick={this.firstPage}>
                                         <FontAwesomeIcon icon={faFastBackward}/> First
                                     </Button>
-                                    <Button type={"button"} variant={"outline-info"} disabled={currentPage === 1}
+                                    <Button type={"button"} variant={"outline-dark"} disabled={currentPage === 1}
                                             onClick={this.prevPage}>
                                         <FontAwesomeIcon icon={faStepBackward}/> Prev
                                     </Button>
                                 </InputGroup.Prepend>
-                                <FormControl className={"bg-dark pageNumCss"} name={"currentPage"} value={currentPage}
+                                <FormControl className={"pageNumCss"} name={"currentPage"} value={currentPage}
                                              onChange={this.changePage}/>
                                 <InputGroup.Append>
-                                    <Button type={"button"} variant={"outline-info"} disabled={currentPage === totalPages}
+                                    <Button type={"button"} variant={"outline-dark"} disabled={currentPage === totalPages}
                                             onClick={this.nextPage}>
                                         <FontAwesomeIcon icon={faStepForward}/> Next
                                     </Button>
-                                    <Button type={"button"} variant={"outline-info"} disabled={currentPage === totalPages}
+                                    <Button type={"button"} variant={"outline-dark"} disabled={currentPage === totalPages}
                                             onClick={this.lastPage}>
                                         <FontAwesomeIcon icon={faFastForward}/> Last
                                     </Button>
@@ -191,8 +204,8 @@ export default class Storage extends Component{
                 </Card>
 
 
-                <Modal show={this.state.showModal} onHide={this.handleClose} onClick={this.handleClose}>
-                    <AnimalModal />
+                <Modal show={this.state.showModal} onHide={this.handleClose}>
+                    <SupplyAddModal />
                 </Modal>
 
             </div>

@@ -17,7 +17,7 @@ export default class Animal extends Component{
     }
 
     initialState = {
-        id: "", name: "", age: "", typ: ""
+        id: "", name: "", age: "", typ: "", ownerid: localStorage.getItem("userID")
     }
 
     componentDidMount() {
@@ -54,7 +54,10 @@ export default class Animal extends Component{
             name: this.state.name,
             animalID : this.state.id,
             age: this.state.age,
-            typ: this.state.typ
+            typ: this.state.typ,
+            owner: {
+                "id": this.state.ownerid
+            }
         }
 
         axios.put("http://localhost:8080/api/Animals", animal)
@@ -76,12 +79,16 @@ export default class Animal extends Component{
         const animal = {
             name: this.state.name,
             age: this.state.age,
-            typ: this.state.typ
+            typ: this.state.typ,
+            owner: {
+                "id": this.state.ownerid
+            }
         }
 
         axios.post("http://localhost:8080/api/Animals", animal)
             .then(response => {
                 if(response.data != null){
+                    console.log(animal)
                     this.setState({"show":true, "method":"put"})
                     setTimeout(() => this.setState({"show":false}), 3000)
                 } else{

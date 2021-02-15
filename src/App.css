@@ -8,3 +8,9 @@
   background-size: cover;
   height: 100vh;
 }
+
+.index-name{
+  font-size: 40px;
+  font-family: "Comic Sans MS";
+  text-align: center;
+}

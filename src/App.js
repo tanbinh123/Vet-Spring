@@ -19,6 +19,10 @@ import ClientPage from "./components/ClientPage";
 import VisitCalendar from "./components/VisitCalendar";
 import BookingPage from "./components/BookingPage";
 import WorkerPage from "./components/WorkerPage";
+import AdminPage from "./components/AdminPage";
+import UserAddAdmin from "./components/UserAddAdmin";
+import AnimalListAdmin from "./components/AnimalListAdmin";
+import VisitsAdmin from "./components/VisitsAdmin";
 
 function App() {
 
@@ -34,7 +38,7 @@ function App() {
                             <Route path={"/list"} exact component={AnimalList}/>
                             <Route path={"/edit/:id"} exact component={Animal}/>
                             <Route path={"/users"} exact component={UserList}/>
-                            <Route path={"/editu/:id"} exact component={UserAdd}/>
+                            <Route path={"/editu/:id"} exact component={UserAddAdmin}/>
                             <Route path={"/addusers"} exact component={UserAdd}/>
                             <Route path={"/orders"} exact component={OrdersList}/>
                             <Route path={"/edito/:id"} exact component={OrderAdd}/>
@@ -48,14 +52,20 @@ function App() {
                             <Route path={"/visitCalendar"} exact component={VisitCalendar}/>
                             <Route path={"/bookingPage"} exact component={BookingPage}/>
                             <Route path={"/workerpage"} exact component={WorkerPage}/>
-
-
+                            <Route path={"/adminpage"} exact component={AdminPage}/>
+                            <Route path={"/animallistadmin"} exact component={AnimalListAdmin}/>
+                            <Route path={"/visitsadmin"} exact component={VisitsAdmin}/>
+                            <Route path={"/navbar"} exact component={NavBar}/>
                         </Switch>
                     </Col>
                 </Row>
             </Container>
-        <Footer/>
+            <Footer/>
         </Router>
+{/*
+          <div className={"index-name"}>Vet Website</div>
+*/}
+
       </div>
   );
 }

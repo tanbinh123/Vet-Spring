@@ -17,15 +17,52 @@ export default class AnimalModal extends Component{
     }
 
     initialState = {
-        id: "", name: "", age: "", typ: ""
+        id: "", name: "", age: "", typ: "",
+        ownerid: localStorage.getItem("userID"),
+        owner: [],
+        animals: []
     }
 
     componentDidMount() {
+        axios.get("http://localhost:8080/api/Users/?index=" + this.state.ownerid)
+            .then(response => response.data)
+            .then((data) => {
+                this.setState({owner: data})
+                console.log(this.state.owner)
+            })
+    }
 
+    getAnimals = () => {
+        axios.get("http://localhost:8080/api/Animals/all")
+            .then(response => response.data)
+            .then((data) => {
+                data.map(animal => {
+                    if (animal.owner !== null) {
+                        if (animal.owner.id == this.state.userid) {
+                            this.state.animals.push(animal)
+                        }
+                    }
+                })
+        })
     }
 
     resetForm = () => {
         this.setState(() => this.initialState)
+    }
+
+    updateOwner = (a) => {
+
+        this.getAnimals()
+        this.state.animals.push(a)
+
+        this.setState({
+            "owner.animal": this.state.animals
+        })
+
+        console.log(this.state.owner)
+
+        axios.put("http://localhost:8080/api/Users", this.state.owner)
+            .then(r => console.log("owner updated successfully"))
     }
 
     SubmitAnimal = event => {
@@ -34,12 +71,15 @@ export default class AnimalModal extends Component{
         const animal = {
             name: this.state.name,
             age: this.state.age,
-            typ: this.state.typ
+            typ: this.state.typ,
+            owner: {
+                "id": this.state.ownerid
+            }
         }
-
         axios.post("http://localhost:8080/api/Animals", animal)
             .then(response => {
                 if(response.data != null){
+                    this.updateOwner(animal)
                     this.setState({"show":true, "method":"put"})
                     setTimeout(() => this.setState({"show":false}), 3000)
                 } else{
@@ -65,8 +105,7 @@ export default class AnimalModal extends Component{
                     <MyToast show = {this.state.show} message = {this.state.method === "put" ?
                         "Animal updated Successfully." : "Animal saved Successfully."} type = {"success"}/>
                 </div>
-                <Card className={"border border-dark text-black"}
-                      style={{backgroundColor: 'rgba(255, 255, 255, 0.4)'}}>
+                <Card className={"border border-dark text-black bg-trans"}>
                     <Card.Header><FontAwesomeIcon icon={this.state.id !== "" ? faEdit : faPlusSquare}/>
                     {this.state.id !== "" ? " Update Animal" : " Add new Animal"}</Card.Header>
                     <Form id={"AnimalFormId"} onSubmit={this.state.id !== "" ?
@@ -76,22 +115,19 @@ export default class AnimalModal extends Component{
                                 <Form.Group as={Col} controlId={"formGridTitle"}>
                                     <Form.Label>Name</Form.Label>
                                     <Form.Control required autoComplete={"off"} type="text" placeholder="Enter a Name"
-                                                  className={"text-black"} name={"name"}
-                                                  style={{backgroundColor: 'rgba(255, 255, 255, 0.4)'}}
+                                                  className={"text-black bg-trans"} name={"name"}
                                                   value={name} onChange={this.animalChange}/>
                                 </Form.Group>
                                 <Form.Group as={Col} controlId={"formGridTitle"}>
                                     <Form.Label>Age</Form.Label>
                                     <Form.Control required autoComplete={"off"} type={"number"} placeholder="Age"
-                                                  className={"text-black"} name={"age"}
-                                                  style={{backgroundColor: 'rgba(255, 255, 255, 0.4)'}}
+                                                  className={"text-black bg-trans"} name={"age"}
                                                   value={age} onChange={this.animalChange}/>
                                 </Form.Group>
                                 <Form.Group as={Col} controlId={"formGridTitle"}>
                                     <Form.Label>Type</Form.Label>
                                     <Form.Control required autoComplete={"off"} type={"text"} placeholder="Type"
-                                                  className={"text-black"} name={"typ"}
-                                                  style={{backgroundColor: 'rgba(255, 255, 255, 0.4)'}}
+                                                  className={"text-black bg-trans"} name={"typ"}
                                                   value={typ} onChange={this.animalChange}/>
                                 </Form.Group>
                             </Form.Row>

@@ -1,50 +1,95 @@
 import {React, Component} from "react";
-import {Button, ButtonGroup, Card, FormControl, InputGroup, Nav, Table} from "react-bootstrap";
+import {Modal, Button, ButtonGroup, Card, FormControl, InputGroup, Nav, Table} from "react-bootstrap";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faList, faEdit, faTrash, faStepBackward, faStepForward, faFastBackward, faFastForward} from '@fortawesome/free-solid-svg-icons';
+import {
+    faList,
+    faEdit,
+    faTrash,
+    faStepBackward,
+    faStepForward,
+    faFastBackward,
+    faFastForward,
+    faSearch, faTimes
+} from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios'
 import MyToast from "./MyToast";
 import {Link} from "react-router-dom";
+import AnimalModal from "./AnimalModal";
 import "./CSS/Style.css"
 
 
-export default class VisitCalendar extends Component{
+export default class AnimalListAdmin extends Component{
 
     constructor(props) {
         super(props);
         this.state = {
-            userid: localStorage.getItem("userID"),
-            visits: [],
+            animals: [],
+            animalsSearch: [],
+            search: '',
             data2: [],
             currentPage: 1,
-            visitsPerPage: 5,
-            };
+            animalsPerPage: 5,
+            showModal: false,
+            showModalEdit: false
+        };
     }
 
     componentDidMount() {
-        axios.get("http://localhost:8080/api/Visits/all")
+        this.getAnimals()
+    }
+
+    getAnimals = () => {
+        axios.get("http://localhost:8080/api/Animals/all")
             .then(response => response.data)
             .then((data) => {
-                data.map(visit => {
-                    if (visit.client.id == this.state.userid) {
-                            this.state.data2.push(visit)
-                    }
+                data.map(animal => {
+                    this.state.data2.push(animal)
                 })
 
+                console.log(this.state.data2)
                 this.setState({
-                    "visits": this.state.data2
+                    "animals": this.state.data2
                 })
             })
     }
 
-    deleteVisit = (visitId) =>{
-        axios.delete("http://localhost:8080/api/Visits?index=" + visitId)
+    findAnimalByName = (animalName) => {
+        this.state.animals.map(animal => {
+            if(animal.name === animalName){
+                this.state.animalsSearch.push(animal)
+            }
+        })
+    }
+
+    switchAnimals = (name) => {
+        this.findAnimalByName(name)
+        this.setState({
+            "animals": this.state.animalsSearch
+        })
+    }
+
+    cancelSearch = () => {
+        this.setState({
+            "search": '',
+            "animalsSearch": []
+        })
+        this.getAnimals()
+    }
+
+    searchChange = event => {
+        this.setState({
+            [event.target.name]: event.target.value
+        })
+    }
+
+    deleteAnimal = (animalId) =>{
+        axios.delete("http://localhost:8080/api/Animals?index=" + animalId)
             .then(response => {
                 if(response.data != null){
                     this.setState({"show":true});
                     setTimeout(() => this.setState({"show":false}), 3000);
                     this.setState({
-                        visits: this.state.visits.filter(visit => visit.visitID !== visitId)
+                        animals: this.state.animals.filter(animal => animal.animalID !== animalId)
                     });
                 } else{
                     this.setState({"show":false})
@@ -75,7 +120,7 @@ export default class VisitCalendar extends Component{
     }
 
     nextPage = () => {
-        if(this.state.currentPage < Math.ceil(this.state.visits.length / this.state.visitsPerPage)){
+        if(this.state.currentPage < Math.ceil(this.state.animals.length / this.state.animalsPerPage)){
             this.setState({
                 currentPage: this.state.currentPage + 1
             })
@@ -83,71 +128,95 @@ export default class VisitCalendar extends Component{
     }
 
     lastPage = () => {
-        if(this.state.currentPage < Math.ceil(this.state.visits.length / this.state.visitsPerPage)){
+        if(this.state.currentPage < Math.ceil(this.state.animals.length / this.state.animalsPerPage)){
             this.setState({
-                currentPage: Math.ceil(this.state.visits.length / this.state.visitsPerPage)
+                currentPage: Math.ceil(this.state.animals.length / this.state.animalsPerPage)
             })
         }
     }
 
     panel = () => {
-        return this.props.history.push("/clientpage")
+        return this.props.history.push("/adminpage")
     }
 
     render(){
 
-        const {visits, currentPage, visitsPerPage} = this.state;
-        const lastIndex = currentPage * visitsPerPage;
-        const firstIndex = lastIndex - visitsPerPage;
-        const currentVisits = visits.slice(firstIndex, lastIndex);
-        const totalPages = Math.ceil(this.state.visits.length / this.state.visitsPerPage)
+        const {animals, currentPage, animalsPerPage, search} = this.state;
+        const lastIndex = currentPage * animalsPerPage;
+        const firstIndex = lastIndex - animalsPerPage;
+        const currentAnimals = animals.slice(firstIndex, lastIndex);
+        const totalPages = Math.ceil(this.state.animals.length / this.state.animalsPerPage)
 
         return(
             <div>
                 <div style={{"display":this.state.show ? "block" : "none"}}>
-                    <MyToast show = {this.state.show} message = {"Visit deleted Successfully."} type = {"danger"}/>
+                    <MyToast show = {this.state.show} message = {"Animal deleted Successfully."} type = {"danger"}/>
                 </div>
                 <Card className={"border border-dark text-white bg-trans"}>
                     <Card.Header>
                         <div style={{"float":"left", fontWeight: 'bold', color: 'black'}}>
-                            <FontAwesomeIcon icon={faList}/> Visits List
+                            <FontAwesomeIcon icon={faList}/> Animal List
                         </div>
-                        <div style={{"float":"right", fontWeight: 'bold', color: 'black'}}>
-                            <Button className={"back-btn"} style={{marginLeft: 0}} onClick={this.panel}>
+                        <div style={{"float":"left", fontWeight: 'bold', color: 'black'}}>
+                            <Button className={"back-btn"} onClick={this.panel}>
                                 Back to Panel
                             </Button>
+                        </div>
+                        <div style={{"float":"right", fontWeight: 'bold', color: 'black'}}>
+                            <InputGroup size={"sm"}>
+                                <FormControl placeholder={"Search"} name={"search"} value={search}
+                                             className={"text-black info-border"} onChange={this.searchChange} />
+                                <InputGroup.Append>
+                                    <Button size={"sm"} variant={"outline-info"}
+                                            type={"button"} onClick={() => this.switchAnimals(search)}>
+                                        <FontAwesomeIcon icon={faSearch}/>
+                                    </Button>
+                                    <Button size={"sm"} variant={"outline-danger"}
+                                            type={"button"} onClick={this.cancelSearch}>
+                                        <FontAwesomeIcon icon={faTimes}/>
+                                    </Button>
+                                </InputGroup.Append>
+                            </InputGroup>
                         </div>
                     </Card.Header>
                     <Card.Body>
                         <Table bordered hover striped variant={"secondary bg-trans"}>
                             <thead>
                             <tr>
-                                <th>Day</th>
-                                <th>Time</th>
-                                <th>Animal</th>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Age</th>
+                                <th>Type</th>
+                                <th>Owner</th>
                                 <th>Action</th>
                             </tr>
                             </thead>
                             <tbody>
-                            {visits.length === 0 ?
+                            {animals.length === 0 ?
                                 <tr align={"center"}>
-                                    <td colSpan={"6"}>{visits.length}</td>
+                                    <td colSpan={"6"}>{animals.length}</td>
                                 </tr>   :
-                                currentVisits.map((visit) => (
-                                    <tr key={visit.id}>
+                                currentAnimals.map((animal) => (
+                                    <tr key={animal.id}>
                                         <td>
-                                            {visit.day}
+                                            {animal.animalID}
                                         </td>
                                         <td>
-                                            {visit.time}
+                                            {animal.name}
                                         </td>
                                         <td>
-                                            {visit.animal.name}
+                                            {animal.age}
+                                        </td>
+                                        <td>
+                                            {animal.typ}
+                                        </td>
+                                        <td>
+                                            {animal.owner.email}
                                         </td>
                                         <td>
                                             <ButtonGroup>
-                                                {/*<Link to={"edit/"+animal.animalID} className={"btn btn-sm btn-outline-primary"} size={"sm"}><FontAwesomeIcon icon={faEdit}/></Link>*/}
-                                                <Button size={"sm"} variant={"outline-danger"} onClick={this.deleteVisit.bind(this, visit.visitID)}><FontAwesomeIcon icon={faTrash}/></Button>
+                                                <Link to={"edit/"+animal.animalID} className={"btn btn-sm btn-outline-primary"} size={"sm"}><FontAwesomeIcon icon={faEdit}/></Link>
+                                                <Button size={"sm"} variant={"outline-danger"} onClick={this.deleteAnimal.bind(this, animal.animalID)}><FontAwesomeIcon icon={faTrash}/></Button>
                                             </ButtonGroup>
                                         </td>
                                     </tr>
@@ -188,6 +257,13 @@ export default class VisitCalendar extends Component{
                         </div>
                     </Card.Footer>
                 </Card>
+
+
+                <Modal show={this.state.showModal}
+                       onHide={this.handleClose} onClick={this.handleClose}>
+                    <AnimalModal />
+                </Modal>
+
             </div>
         )
     }

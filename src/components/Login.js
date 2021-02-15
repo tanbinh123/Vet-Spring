@@ -4,7 +4,7 @@ import Col from "react-bootstrap/Col";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faEdit, faList, faPlusSquare, faSave, faUndo} from '@fortawesome/free-solid-svg-icons';
 import axios from "axios";
-import MyToast from "./MyToast";
+import "./CSS/Style.css"
 
 export default class Login extends Component{
 
@@ -34,11 +34,15 @@ export default class Login extends Component{
             if(user.email === this.state.email){
                 if(user.password === pass){
                     localStorage.setItem("userID", user.id)
-                    localStorage.setItem("islogged", true)
+                    localStorage.setItem("userRank", user.rank)
                     this.afterLoginPage(user)
                 }
             }
         })
+    }
+
+    navbarChange = () => {
+        return this.props.history.push({pathname: "/navbar", state: {isloggedin: true}})
     }
 
     resetForm = () => {
@@ -54,8 +58,10 @@ export default class Login extends Component{
     afterLoginPage = (user) => {
         if(user.rank === "CLIENT")
             return this.props.history.push("/clientpage")
-        else
+        else if(user.rank === "WORKER")
             return this.props.history.push("/workerpage")
+        else if(user.rank === "ADMIN")
+            return this.props.history.push("/adminpage")
     }
 
     render() {
@@ -63,9 +69,7 @@ export default class Login extends Component{
 
         return(
             <div>
-                <Card className={"border border-dark text-black"} style={{
-                    backgroundColor: 'rgba(255, 255, 255, 0.4)'
-                }}>
+                <Card className={"border border-dark text-black bg-trans"}>
                     <Card.Header><FontAwesomeIcon icon={this.state.id !== "" ? faEdit : faPlusSquare}/> Log in</Card.Header>
                     <Form id={"LoginFormId"} onReset={this.resetForm}>
                         <Card.Body>
@@ -73,15 +77,13 @@ export default class Login extends Component{
                                 <Form.Group as={Col} controlId={"formGridTitle"}>
                                     <Form.Label>Email</Form.Label>
                                     <Form.Control required autoComplete={"off"} type="text" placeholder="Enter Email"
-                                                  className={"text-black"} name={"email"}
-                                                  style={{backgroundColor: 'rgba(255, 255, 255, 0.4)'}}
+                                                  className={"text-black bg-trans"} name={"email"}
                                                   value={email} onChange={this.userChange}/>
                                 </Form.Group>
                                 <Form.Group as={Col} controlId={"formGridTitle"}>
                                     <Form.Label>Password</Form.Label>
                                     <Form.Control required autoComplete={"off"} type={"password"} placeholder="Password"
-                                                  className={"text-black"}
-                                                  style={{backgroundColor: 'rgba(255, 255, 255, 0.4)'}}
+                                                  className={"text-black bg-trans"}
                                                   name={"password"}
                                                   value={password} onChange={this.userChange}/>
                                 </Form.Group>

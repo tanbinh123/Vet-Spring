@@ -14,7 +14,9 @@ export default class AnimalList extends Component{
     constructor(props) {
         super(props);
         this.state = {
+            userid: localStorage.getItem("userID"),
             animals: [],
+            data2: [],
             currentPage: 1,
             animalsPerPage: 5,
             showModal: false,
@@ -26,9 +28,20 @@ export default class AnimalList extends Component{
         axios.get("http://localhost:8080/api/Animals/all")
             .then(response => response.data)
             .then((data) => {
-                this.setState({animals: data})
+                data.map(animal => {
+                    if (animal.owner !== null) {
+                        if (animal.owner.id == this.state.userid) {
+                            this.state.data2.push(animal)
+                        }
+                     }
+                })
+
+                console.log(this.state.data2)
+                this.setState({
+                    "animals": this.state.data2
+                })
             })
-    };
+    }
 
     deleteAnimal = (animalId) =>{
         axios.delete("http://localhost:8080/api/Animals?index=" + animalId)
@@ -89,20 +102,18 @@ export default class AnimalList extends Component{
         })
     }
 
-    // handleShowWithParams = (animalId) => {
-    //     this.setState({
-    //         showModalEdit: true
-    //     })
-    // }
-
     handleClose = () => {
         this.setState({
             showModal: false
 
         },
-        console.log("asdasd")
         )
     }
+
+    panel = () => {
+        return this.props.history.push("/clientpage")
+    }
+
 
     render(){
 
@@ -117,12 +128,15 @@ export default class AnimalList extends Component{
             <div style={{"display":this.state.show ? "block" : "none"}}>
                 <MyToast show = {this.state.show} message = {"Animal deleted Successfully."} type = {"danger"}/>
             </div>
-            <Card className={"border border-dark text-white"} style={{
-                backgroundColor: 'rgba(255, 255, 255, 0.4)'
-            }}>
+            <Card className={"border border-dark text-white bg-trans"}>
                 <Card.Header>
                     <div style={{"float":"left", fontWeight: 'bold', color: 'black'}}>
                         <FontAwesomeIcon icon={faList}/> Animal List
+                    </div>
+                    <div style={{"float":"left", fontWeight: 'bold', color: 'black'}}>
+                        <Button size={"sm"} className={"back-btn"} onClick={this.panel}>
+                            Back to Panel
+                        </Button>
                     </div>
                     <div style={{"float":"right"}}>
                         <Button size={"sm"} onClick={this.handleShow}>
@@ -131,9 +145,7 @@ export default class AnimalList extends Component{
                     </div>
                 </Card.Header>
                 <Card.Body>
-                    <Table bordered hover striped variant={"secondary"} style={{
-                        backgroundColor: 'rgba(255, 255, 255, 0.4)'
-                    }}>
+                    <Table bordered hover striped variant={"secondary bg-trans"}>
                         <thead>
                         <tr>
                             <th>ID</th>
@@ -166,7 +178,6 @@ export default class AnimalList extends Component{
                                         <ButtonGroup>
                                             <Link to={"edit/"+animal.animalID} className={"btn btn-sm btn-outline-primary"} size={"sm"}><FontAwesomeIcon icon={faEdit}/></Link>
                                             <Button size={"sm"} variant={"outline-danger"} onClick={this.deleteAnimal.bind(this, animal.animalID)}><FontAwesomeIcon icon={faTrash}/></Button>
-                                            {/*<Button onClick={this.handleShowWithParams(animal.animalID)} className={"btn btn-sm btn-outline-primary"}><FontAwesomeIcon icon={faEdit}/></Button>*/}
                                         </ButtonGroup>
                                     </td>
                                 </tr>
@@ -182,23 +193,23 @@ export default class AnimalList extends Component{
                     <div style={{"float":"right"}}>
                         <InputGroup size={"sm"}>
                             <InputGroup.Prepend>
-                                <Button type={"button"} variant={"outline-info"} disabled={currentPage === 1}
+                                <Button type={"button"} variant={"outline-dark"} disabled={currentPage === 1}
                                 onClick={this.firstPage}>
                                     <FontAwesomeIcon icon={faFastBackward}/> First
                                 </Button>
-                                <Button type={"button"} variant={"outline-info"} disabled={currentPage === 1}
+                                <Button type={"button"} variant={"outline-dark"} disabled={currentPage === 1}
                                         onClick={this.prevPage}>
                                     <FontAwesomeIcon icon={faStepBackward}/> Prev
                                 </Button>
                             </InputGroup.Prepend>
-                            <FormControl className={"bg-dark pageNumCss"} name={"currentPage"} value={currentPage}
+                            <FormControl className={"pageNumCss"} name={"currentPage"} value={currentPage}
                             onChange={this.changePage}/>
                             <InputGroup.Append>
-                                <Button type={"button"} variant={"outline-info"} disabled={currentPage === totalPages}
+                                <Button type={"button"} variant={"outline-dark"} disabled={currentPage === totalPages}
                                         onClick={this.nextPage}>
                                     <FontAwesomeIcon icon={faStepForward}/> Next
                                 </Button>
-                                <Button type={"button"} variant={"outline-info"} disabled={currentPage === totalPages}
+                                <Button type={"button"} variant={"outline-dark"} disabled={currentPage === totalPages}
                                         onClick={this.lastPage}>
                                     <FontAwesomeIcon icon={faFastForward}/> Last
                                 </Button>
@@ -209,8 +220,7 @@ export default class AnimalList extends Component{
             </Card>
 
 
-                <Modal show={this.state.showModal}
-                       onHide={this.handleClose} onClick={this.handleClose}>
+                <Modal show={this.state.showModal} onHide={this.handleClose}>
                         <AnimalModal />
                 </Modal>
 

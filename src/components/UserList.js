@@ -89,7 +89,8 @@ export default class UserList extends Component{
 
     cancelSearch = () => {
         this.setState({
-            "search": ''
+            "search": '',
+            "usersSearch": []
         })
         this.getUsers()
     }
@@ -126,6 +127,10 @@ export default class UserList extends Component{
         }
     }
 
+    panel = () => {
+        return this.props.history.push("/adminpage")
+    }
+
 
 
     render(){
@@ -141,12 +146,15 @@ export default class UserList extends Component{
                 <div style={{"display":this.state.show ? "block" : "none"}}>
                     <MyToast show = {this.state.show} message = {"User deleted Successfully."} type = {"danger"}/>
                 </div>
-                <Card className={"border border-dark text-white"} style={{
-                    backgroundColor: 'rgba(255, 255, 255, 0.4)'
-                }}>
+                <Card className={"border border-dark text-white bg-trans"}>
                     <Card.Header>
                         <div style={{"float":"left", fontWeight: 'bold', color: 'black'}}>
                             <FontAwesomeIcon icon={faList}/> Users List
+                        </div>
+                        <div style={{"float":"left", fontWeight: 'bold', color: 'black'}}>
+                             <Button className={"back-btn"} onClick={this.panel}>
+                                 Back to Panel
+                             </Button>
                         </div>
                         <div style={{"float":"right", fontWeight: 'bold', color: 'black'}}>
                             <InputGroup size={"sm"}>
@@ -154,7 +162,7 @@ export default class UserList extends Component{
                                              className={"text-black info-border"} onChange={this.searchChange} />
                                     <InputGroup.Append>
                                         <Button size={"sm"} variant={"outline-info"}
-                                                type={"button"} onClick={() => this.switchUsers(search)}>
+                                                type={"button"} onClick={() => this.switchAnimals(search)}>
                                             <FontAwesomeIcon icon={faSearch}/>
                                         </Button>
                                         <Button size={"sm"} variant={"outline-danger"}
@@ -212,23 +220,23 @@ export default class UserList extends Component{
                         <div style={{"float":"right"}}>
                             <InputGroup size={"sm"}>
                                 <InputGroup.Prepend>
-                                    <Button type={"button"} variant={"outline-info"} disabled={currentPage === 1}
+                                    <Button type={"button"} variant={"outline-dark"} disabled={currentPage === 1}
                                             onClick={this.firstPage}>
                                         <FontAwesomeIcon icon={faFastBackward}/> First
                                     </Button>
-                                    <Button type={"button"} variant={"outline-info"} disabled={currentPage === 1}
+                                    <Button type={"button"} variant={"outline-dark"} disabled={currentPage === 1}
                                             onClick={this.prevPage}>
                                         <FontAwesomeIcon icon={faStepBackward}/> Prev
                                     </Button>
                                 </InputGroup.Prepend>
-                                <FormControl className={"bg-dark pageNumCss"} name={"currentPage"} value={currentPage}
+                                <FormControl className={"pageNumCss"} name={"currentPage"} value={currentPage}
                                              onChange={this.changePage}/>
                                 <InputGroup.Append>
-                                    <Button type={"button"} variant={"outline-info"} disabled={currentPage === totalPages}
+                                    <Button type={"button"} variant={"outline-dark"} disabled={currentPage === totalPages}
                                             onClick={this.nextPage}>
                                         <FontAwesomeIcon icon={faStepForward}/> Next
                                     </Button>
-                                    <Button type={"button"} variant={"outline-info"} disabled={currentPage === totalPages}
+                                    <Button type={"button"} variant={"outline-dark"} disabled={currentPage === totalPages}
                                             onClick={this.lastPage}>
                                         <FontAwesomeIcon icon={faFastForward}/> Last
                                     </Button>

@@ -1,8 +1,9 @@
 import React, {Component} from "react";
 import {Button, Row, Card, Col} from "react-bootstrap";
 import axios from "axios";
+import "./CSS/Style.css"
 
-export default class WorkerPage extends Component{
+export default class AdminPage extends Component{
 
     constructor(props) {
         super(props);
@@ -31,48 +32,53 @@ export default class WorkerPage extends Component{
             })
     }
 
-    visitCalendar = () => {
-        return this.props.history.push("/visitsAdmin")
+    visitManager = () => {
+        return this.props.history.push("/visitsadmin")
     }
 
-    orders = () => {
-        return this.props.history.push("/addsupply")
+    userManager = () => {
+        return this.props.history.push("/users")
     }
 
-    storage = () => {
+    animalManager = () => {
+        return this.props.history.push("/animallistadmin")
+    }
+
+    storageManager = () => {
         return this.props.history.push("/storage")
     }
 
 
-    render() {
 
+    render() {
         return(
             <Card className={"border border-dark text-black bg-trans"}>
                 <Card.Header className={"text-center"} style={{fontWeight: 'bold', fontSize: 25}}>
-                    Welcome to Worker Panel!
+                    Welcome to Admin Panel!
                 </Card.Header>
 
                 <Card.Body >
                     <Row>
-                        <Col className={"user-text"}>
-                            <p style={{fontSize: 40}}>User:</p>
-                            <p>{this.state.email}</p>
+                        <Col className={"text-center"}>
+                            <Button className={"border border-dark btn-panel"} onClick={this.storageManager}>
+                                Manage Storage
+                            </Button>
                         </Col>
                         <Col className={"text-center"}>
-                            <Button className={"border border-dark"} variant={"outline-info btn-panel"} onClick={this.orders}>
-                                Orders
+                            <Button className={"border border-dark btn-panel"} onClick={this.userManager}>
+                                Manage Users
                             </Button>
                         </Col>
                     </Row>
                     <Row style={{paddingTop: 20}}>
                         <Col className={"text-center"}>
-                            <Button className={"border border-dark btn-panel"}onClick={this.storage}>
-                                Storage
+                            <Button className={"border border-dark btn-panel"} onClick={this.animalManager}>
+                                Manage Animals
                             </Button>
                         </Col>
                         <Col className={"text-center"}>
-                            <Button className={"border border-dark btn-panel"} onClick={this.visitCalendar}>
-                                Visit Calendar
+                            <Button className={"border border-dark btn-panel"} onClick={this.visitManager}>
+                                Manage Visits
                             </Button>
                         </Col>
                     </Row>
