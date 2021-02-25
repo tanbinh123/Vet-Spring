@@ -11,9 +11,11 @@ export default class BookingPage extends Component{
     constructor(props) {
         super(props);
         this.state = {
+            isVisit: "",
             userid: localStorage.getItem("userID"),
             animals: [],
             data2: [],
+            visits: [],
             day: this.props.history.location.state.day,
             bookAnimalName: "",
             bookAnimalId: "",
@@ -22,7 +24,6 @@ export default class BookingPage extends Component{
     }
 
     componentDidMount() {
-        console.log(this.state.day)
         axios.get("http://localhost:8080/api/Animals/all")
             .then(response => response.data)
             .then((data) => {
@@ -36,6 +37,18 @@ export default class BookingPage extends Component{
 
                 this.setState({
                     "animals": this.state.data2
+                })
+            })
+
+        axios.get("http://localhost:8080/api/Visits/all")
+            .then(response => response.data)
+            .then((data) => {
+                data.map(visit => {
+                    this.state.data2.push(visit)
+                })
+
+                this.setState({
+                    "visits": this.state.data2
                 })
             })
     }
@@ -53,8 +66,6 @@ export default class BookingPage extends Component{
                                 }, () =>{
                                     this.bookVisit()
                                 })
-                                    console.log(this.state.bookAnimalId)
-
                             }
                         }
                         }
@@ -62,24 +73,47 @@ export default class BookingPage extends Component{
                 })
     }
 
+    checkVisitExistance = () => {
+        this.state.visits.map(visit => {
+            /*if(visit !== "Fufu"){
+                let minute = parseInt(this.state.bookTime.slice(3, 5))
+                let Vminute = parseInt(visit.time.slice(3, 5))
+                let diffm = Math.abs(Vminute - 30)
+                let diffp = Math.abs(Vminute + 30)*/
+                if(visit.day === this.state.day)
+                    //if(minute > diffm && minute < diffp)
+                      if(visit.time === this.state.bookTime)
+                          this.state.isVisit = true
+            //}
+        })
+    }
+
     bookVisit = () => {
 
-            let visit = {
-                day: this.state.day,
-                time: this.state.bookTime,
-                animal: {"animalID": this.state.bookAnimalId},
-                client: {"id": this.state.userid}
-            }
+        let visit = {
+            day: this.state.day,
+            time: this.state.bookTime,
+            animal: {"animalID": this.state.bookAnimalId},
+            client: {"id": this.state.userid}
+        }
 
-            console.log(visit)
+        this.checkVisitExistance()
 
+        if(this.state.isVisit !== true) {
             axios.post("http://localhost:8080/api/Visits", visit)
                 .then(response => {
                     if (response.data != null) {
                         this.clientCalendar()
                     }
                 })
+            }
+            else{
+                this.setState({"show":true});
+                setTimeout(() => this.setState({"show":false}), 6000);
+
+            }
     }
+
 
     typeChange = event => {
         this.setState({
@@ -99,6 +133,9 @@ export default class BookingPage extends Component{
 
         return(
             <div>
+                <div style={{"display":this.state.show ? "block" : "none"}}>
+                    <MyToast show = {this.state.show} message = {"Time not available."} type = {"danger"}/>
+                </div>
                 <Card className={"border border-dark text-black bg-trans"}>
                     <Card.Header><FontAwesomeIcon icon={faPlusSquare}/> Book a Visit</Card.Header>
                     <Form id={"BookingFormId"}  >
@@ -107,15 +144,13 @@ export default class BookingPage extends Component{
                                 <Form.Group as={Col} controlId={"formGridTitle"}>
                                     <Form.Label>Time</Form.Label>
                                     <Form.Control required autoComplete={"off"} type="text" placeholder="Enter Visit Time"
-                                                  className={"text-black"} name={"bookTime"}
-                                                  style={{backgroundColor: 'rgba(255, 255, 255, 0.4)'}}
+                                                  className={"text-black bg-trans"} name={"bookTime"}
                                                   value={bookTime} onChange={this.typeChange}/>
                                 </Form.Group>
                                 <Form.Group as={Col} controlId={"formGridTitle"}>
                                     <Form.Label>Animal</Form.Label>
                                     <Form.Control required autoComplete={"off"} type={"text"} placeholder="Animal to Visit"
-                                                  className={"text-black"}
-                                                  style={{backgroundColor: 'rgba(255, 255, 255, 0.4)'}}
+                                                  className={"text-black bg-trans"}
                                                   name={"bookAnimalName"}
                                                   value={bookAnimalName} onChange={this.typeChange}/>
                                 </Form.Group>

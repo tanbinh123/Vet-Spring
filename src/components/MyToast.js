@@ -17,7 +17,7 @@ export default class MyToast extends Component{
                     "border-success bg-success" : "border-danger bg-danger"}`} show={this.props}>
                     <Toast.Header className={`text-white ${this.props.type === "success" ? 
                     "bg-success" : "bg-danger"}`} closeButton={false}>
-                        <strong className={"mr-auto"}>Success</strong>
+                        {/*<strong className={"mr-auto"}>Success</strong>*/}
                     </Toast.Header>
                     <Toast.Body>
                         {this.props.message}

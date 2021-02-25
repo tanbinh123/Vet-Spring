@@ -23,6 +23,7 @@ import AdminPage from "./components/AdminPage";
 import UserAddAdmin from "./components/UserAddAdmin";
 import AnimalListAdmin from "./components/AnimalListAdmin";
 import VisitsAdmin from "./components/VisitsAdmin";
+import text from "./components/text"
 
 function App() {
 
@@ -34,6 +35,7 @@ function App() {
                 <Row>
                     <Col lg={12} className={"margin-top"}>
                         <Switch>
+                            <Route path={"/"} exact component={text}/>
                             <Route path={"/add"} exact component={Animal}/>
                             <Route path={"/list"} exact component={AnimalList}/>
                             <Route path={"/edit/:id"} exact component={Animal}/>

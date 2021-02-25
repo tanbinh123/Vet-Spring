@@ -5,6 +5,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faEdit, faList, faPlusSquare, faSave, faUndo} from '@fortawesome/free-solid-svg-icons';
 import axios from "axios";
 import MyToast from "./MyToast";
+import "./CSS/Style.css"
 
 export default class UserAdd extends Component{
 
@@ -85,12 +86,11 @@ export default class UserAdd extends Component{
                 if(response.data != null){
                     this.setState({"show":true, "method":"post"})
                     setTimeout(() => this.setState({"show":false}), 3000)
-                    setTimeout(() => this.usersList(), 3000)
+                    setTimeout(() => this.panel(), 3000)
                 } else{
                     this.setState({"show":false})
                 }
             })
-        this.setState(this.initialState)
     }
 
     userChange = event => {
@@ -99,8 +99,8 @@ export default class UserAdd extends Component{
         });
     }
 
-    usersList = () => {
-        return this.props.history.push("/users")
+   panel = () => {
+        return this.props.history.push("/login")
     }
 
     render() {
@@ -112,9 +112,7 @@ export default class UserAdd extends Component{
                     <MyToast show = {this.state.show} message = {this.state.method === "put" ?
                         "User updated Successfully." : "User saved Successfully."} type = {"success"}/>
                 </div>
-                <Card className={"border border-dark text-black"} style={{
-                    backgroundColor: 'rgba(255, 255, 255, 0.4)'
-                }}>
+                <Card className={"border border-dark text-black bg-trans"}>
                     <Card.Header><FontAwesomeIcon icon={this.state.id !== "" ? faEdit : faPlusSquare}/>
                         {this.state.id !== "" ? " Update User" : " Add new User"}</Card.Header>
                     <Form id={"UserFormId"} onSubmit={this.state.id !== "" ?
@@ -124,15 +122,13 @@ export default class UserAdd extends Component{
                                 <Form.Group as={Col} controlId={"formGridTitle"}>
                                     <Form.Label>Email</Form.Label>
                                     <Form.Control required autoComplete={"off"} type="text" placeholder="Enter Email"
-                                                  className={"text-black"} name={"email"}
-                                                  style={{backgroundColor: 'rgba(255, 255, 255, 0.4)'}}
+                                                  className={"text-black bg-trans"} name={"email"}
                                                   value={email} onChange={this.userChange}/>
                                 </Form.Group>
                                 <Form.Group as={Col} controlId={"formGridTitle"}>
                                     <Form.Label>Password</Form.Label>
                                     <Form.Control required autoComplete={"off"} type={"password"} placeholder="Password"
-                                                  className={"text-black"}
-                                                  style={{backgroundColor: 'rgba(255, 255, 255, 0.4)'}}
+                                                  className={"text-black bg-trans"}
                                                   name={"password"}
                                                   value={password} onChange={this.userChange}/>
                                 </Form.Group>
