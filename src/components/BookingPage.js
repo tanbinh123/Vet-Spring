@@ -6,6 +6,12 @@ import {faEdit, faList, faPlusSquare, faSave, faUndo} from '@fortawesome/free-so
 import axios from "axios";
 import MyToast from "./MyToast";
 
+const options = [
+    { value: 'chocolate', label: 'Chocolate' },
+    { value: 'strawberry', label: 'Strawberry' },
+    { value: 'vanilla', label: 'Vanilla' },
+];
+
 export default class BookingPage extends Component{
 
     constructor(props) {
@@ -75,16 +81,18 @@ export default class BookingPage extends Component{
 
     checkVisitExistance = () => {
         this.state.visits.map(visit => {
-            /*if(visit !== "Fufu"){
+            if(visit !== "Fufu"){
                 let minute = parseInt(this.state.bookTime.slice(3, 5))
                 let Vminute = parseInt(visit.time.slice(3, 5))
-                let diffm = Math.abs(Vminute - 30)
-                let diffp = Math.abs(Vminute + 30)*/
+                let hour = parseInt(this.state.bookTime.slice(0, 2))
+                let Vhour = parseInt(visit.time.slice(0, 2))
+                let minutesConverted = hour * 60 + minute
+                let VminutesConverted = Vhour * 60 + Vminute
+                let diff = Math.abs(VminutesConverted - minutesConverted)
                 if(visit.day === this.state.day)
-                    //if(minute > diffm && minute < diffp)
-                      if(visit.time === this.state.bookTime)
-                          this.state.isVisit = true
-            //}
+                        if(diff < 30)
+                            this.state.isVisit = true
+            }
         })
     }
 
@@ -127,6 +135,8 @@ export default class BookingPage extends Component{
     }
 
 
+
+
     render() {
 
         const {bookAnimalName, bookTime} = this.state;
@@ -156,13 +166,23 @@ export default class BookingPage extends Component{
                                 </Form.Group>
                             </Form.Row>
                         </Card.Body>
-                        {/*<Card.Body>
-                            <Form.Row>
+                           {/* <Form.Row>
+                                <select id = "dropdown" value={""} defaultValue={""}>
+                                    <option value="N/A">N/A</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                </select>
+
                                 <Form.Group as={Col} controlId={"formGridTitle"}>
                                     <Form.Label>Time</Form.Label>
                                     <Form.Control required autoComplete={"off"} as={"select"}
                                                   className={"text-black bg-trans"} name={"time"}
-                                                  value={time} > {this.options()}
+                                                  value={bookTime} onChange={this.typeChange}>
+                                        <option value={"12:00"}>12:00</option>
+                                        <option value={"12:30"}>12:30</option>
+                                        <option>14:00</option>
                                     </Form.Control>
                                 </Form.Group>
                                 <Form.Group as={Col} controlId={"formGridTitle"}>
@@ -172,8 +192,8 @@ export default class BookingPage extends Component{
                                                   value={animal} > {this.optionsAnimal()}
                                     </Form.Control>
                                 </Form.Group>
-                            </Form.Row>
-                        </Card.Body>*/} {/*not working dropdown, maybe fix ?*/ }
+                            </Form.Row>*/}
+                       {/*not working dropdown, maybe fix ?*/ }
                         <Card.Footer>
                             <Button variant="success" type="button" onClick={() => this.getAnimalbyName(bookAnimalName)}>
                                 <FontAwesomeIcon icon={faSave} /> Book
